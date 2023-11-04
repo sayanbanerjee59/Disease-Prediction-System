@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Skin Disease Detection</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+
+<body>
+    <div class="container">
+        <h1 class="bg-primary text-white p-3">Skin Disease Detection</h1>
+        <form id="myForm" action="/predict" method="post" class="bg-light p-3 rounded">
+            <div class="form-group">
+                <label for="itching">Itching :</label>
+                <input type="text" class="form-control" id="itching" name="itching" required>
+            </div>
+
+            <div class="form-group">
+                <label for="skin_rash">Skin Rash :</label>
+                <input type="text" class="form-control" id="skin_rash" name="skin_rash" required>
+            </div>
+
+            <div class="form-group">
+                <label for="nodal_skin_eruptions">Nodal Skin Eruptions :</label>
+                <input type="text" class="form-control" id="nodal_skin_eruptions" name="nodal_skin_eruptions" required>
+            </div>
+
+            <div class="form-group">
+                <label for="continuous_sneezing">Continuous Sneezing :</label>
+                <input type="text" class="form-control" id="continuous_sneezing" name="continuous_sneezing" required>
+            </div>
+
+            <div class="form-group">
+                <label for="shivering">Shivering :</label>
+                <input type="text" class="form-control" id="shivering" name="shivering" required>
+            </div>
+            <!-- Add the other fields in a similar manner -->
+
+            <button type="submit" class="btn btn-primary">Predict</button>
+        </form>
+
+        <div id="hiddenDiv" style="display: none;">
+            Prediction: <span id="predictionValue"></span>
+        </div>
+        <script>
+            const myForm = document.getElementById('myForm');
+            const hiddenDiv = document.getElementById('hiddenDiv');
+            const predictionValueSpan = document.getElementById('predictionValue');
+
+            myForm.addEventListener('submit', function (event) {
+                event.preventDefault();
+                const formData = new FormData(myForm);
+
+                // Make an AJAX request to your Flask server for prediction
+                fetch('/predict', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    // Handle the response
+                    const predictionValue = data.prediction;
+                    predictionValueSpan.textContent = predictionValue;
+                    hiddenDiv.style.display = 'block';
+                })
+                .catch(error => {
+                    console.error('Error occurred during prediction:', error);
+                });
+            });
+        </script>
+    </div>
+</body>
+</html>
